@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "src/context/LanguageContext";
 import styles from "../login/auth.module.css";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 /**
  * Компонент страницы регистрации нового ученика (/register).
@@ -22,6 +23,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [website, setWebsite] = useState<string>("");
+  const [turnstileToken, setTurnstileToken] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
@@ -51,6 +53,13 @@ export default function RegisterPage() {
       return;
     }
 
+    // 3. Проверка прохождения капчи Turnstile
+    if (!turnstileToken) {
+      setError(language === "ru" ? "Пожалуйста, пройдите проверку безопасности" : "Bitte bestätigen Sie, dass Sie kein Roboter sind");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -63,6 +72,7 @@ export default function RegisterPage() {
           phone,
           password,
           website,
+          turnstileToken,
         }),
       });
 
@@ -202,6 +212,20 @@ export default function RegisterPage() {
               onChange={(e) => setWebsite(e.target.value)}
               tabIndex={-1}
               autoComplete="off"
+            />
+          </div>
+
+          {/* Cloudflare Turnstile для защиты от ботов */}
+          <div className={styles.formGroup} style={{ display: "flex", justifyContent: "center", marginTop: "16px", marginBottom: "16px" }}>
+            <Turnstile
+              siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+              onSuccess={(token) => setTurnstileToken(token)}
+              onError={() => setError(language === "ru" ? "Ошибка проверки безопасности Turnstile" : "Turnstile-Sicherheitsprüfung fehlgeschlagen")}
+              onExpire={() => setTurnstileToken("")}
+              options={{
+                theme: "light",
+                size: "normal"
+              }}
             />
           </div>
 

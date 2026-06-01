@@ -13,6 +13,7 @@
     "postinstall": "echo 'postinstall: skip prisma generate (runs in build)'"
   },
   "dependencies": {
+    "@marsidev/react-turnstile": "^1.5.2",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@vercel/blob": "^2.4.0",

@@ -12,6 +12,7 @@ const registerSchema = z.object({
   name: z.string().min(2, "Имя должно быть не менее 2 символов"),
   phone: z.string().min(8, "Телефон должен быть не менее 8 цифр"),
   website: z.string().optional(),
+  turnstileToken: z.string().min(1, "Токен безопасности Turnstile отсутствует"),
 });
 
 /**
@@ -33,6 +34,39 @@ export async function POST(request: Request) {
         success: true,
         message: "Регистрация прошла успешно",
       });
+    }
+
+    // 2. Валидация Cloudflare Turnstile токена безопасности
+    const secretKey = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || "1x00000000000000000000000000000000";
+    
+    try {
+      const cfResponse = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          secret: secretKey,
+          response: validatedData.turnstileToken,
+        }),
+      });
+      
+      const cfResult = await cfResponse.json();
+      
+      if (!cfResult.success) {
+        logger.warn({ email: validatedData.email, cfResult }, "Регистрация отклонена: неверный или просроченный токен Turnstile (бот)");
+        return NextResponse.json(
+          {
+            error: true,
+            code: "TURNSTILE_FAILED",
+            message: "Проверка безопасности не пройдена. Пожалуйста, попробуйте снова.",
+          },
+          { status: 400 }
+        );
+      }
+    } catch (cfError) {
+      logger.error({ cfError }, "Ошибка при валидации токена Cloudflare Turnstile");
+      // Fail-open: пропускаем регистрацию, если API Cloudflare лежит, чтобы не блокировать реальных людей
     }
 
     // 2. Проверка, существует ли уже пользователь с таким email
