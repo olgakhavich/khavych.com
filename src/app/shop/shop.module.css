@@ -254,6 +254,7 @@
 }
 
 .buyBtn {
+  flex: 0.35;
   background-color: var(--color-primary);
   color: var(--color-light);
   border: 1px solid var(--color-primary);
@@ -272,10 +273,12 @@
 }
 
 .cartBtnOutline {
+  flex: 0.65;
   background-color: transparent;
   color: var(--color-primary);
   border: 1.5px solid var(--color-primary);
 }
+
 
 .cartBtnOutline:hover {
   background-color: var(--color-primary-light);
@@ -388,7 +391,7 @@
 
 /* Селектор количества товара вместо кнопки "В корзину" */
 .quantitySelector {
-  flex: 1;
+  flex: 0.65;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
@@ -400,6 +403,7 @@
   box-sizing: border-box;
   transition: var(--transition-normal);
 }
+
 
 .quantityBtn {
   background: none;
