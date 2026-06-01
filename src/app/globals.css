@@ -107,7 +107,7 @@ button, input, select, textarea {
 /* 3. Вспомогательные классы (Utilities) */
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1306px;
   margin: 0 auto;
   padding: 0 24px;
 }

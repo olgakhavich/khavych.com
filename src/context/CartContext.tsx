@@ -34,7 +34,7 @@ export interface ICartItem {
  */
 interface ICartContextType {
   items: ICartItem[];
-  addToCart: (product: IProduct) => void;
+  addToCart: (product: IProduct, openCart?: boolean) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -83,9 +83,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   /**
    * Добавление товара в корзину с использованием чистой функции хелпера.
    */
-  const addToCart = (product: IProduct) => {
+  const addToCart = (product: IProduct, openCart: boolean = true) => {
     setItems((prevItems) => addItemToCartHelper(prevItems, product));
-    setIsCartOpen(true);
+    if (openCart) {
+      setIsCartOpen(true);
+    }
   };
 
   /**

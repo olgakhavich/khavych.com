@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCart } from "src/context/CartContext";
 import { useLanguage } from "src/context/LanguageContext";
@@ -266,47 +267,70 @@ export default function ShopClient({ products }: ShopClientProps) {
             return (
               <article key={product.id} className={styles.card}>
                 {/* Картинка товара с поддержкой реальных фото или заглушки */}
-                <div className={styles.imageWrapper}>
-                  <img 
-                    src={product.imageUrl || "/placeholder_no_photo.jpeg"} 
-                    alt={name} 
-                    className={styles.productImage} 
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }} 
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <span className={`${styles.badge} ${badgeClass}`}>{categoryLabel}</span>
-                  
-                  {/* Бейдж скидки на картинке */}
-                  {discountPercent > 0 && (
-                    <span 
-                      style={{
-                        position: "absolute",
-                        top: "16px",
-                        right: "16px",
-                        backgroundColor: "var(--color-primary)",
-                        color: "#fff",
-                        padding: "4px 10px",
-                        borderRadius: "var(--radius-sm)",
-                        fontSize: "12px",
-                        fontWeight: 700,
-                        boxShadow: "0 2px 6px rgba(197, 23, 34, 0.2)"
-                      }}
-                    >
-                      -{discountPercent}%
-                    </span>
-                  )}
-                </div>
+                <Link href={`/shop/${product.id}`} className={styles.cardImageLink}>
+                  <div className={styles.imageWrapper}>
+                    <img 
+                      src={product.imageUrl || "/placeholder_no_photo.jpeg"} 
+                      alt={name} 
+                      className={styles.productImage} 
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span className={`${styles.badge} ${badgeClass}`}>{categoryLabel}</span>
+                    
+                    {/* Бейдж скидки на картинке */}
+                    {discountPercent > 0 && (
+                      <span 
+                        style={{
+                          position: "absolute",
+                          top: "16px",
+                          right: "16px",
+                          backgroundColor: "var(--color-primary)",
+                          color: "#fff",
+                          padding: "4px 10px",
+                          borderRadius: "var(--radius-sm)",
+                          fontSize: "12px",
+                          fontWeight: 700,
+                          boxShadow: "0 2px 6px rgba(197, 23, 34, 0.2)"
+                        }}
+                      >
+                        -{discountPercent}%
+                      </span>
+                    )}
+                  </div>
+                </Link>
 
                 {/* Содержимое карточки */}
                 <div className={styles.cardBody}>
-                  <h3 className={styles.productName}>{name}</h3>
-                  <p className={styles.productDesc}>{description}</p>
+                  {/* Цена СРАЗУ после картинки */}
+                  <div className={styles.priceRow}>
+                    <span className={styles.price}>
+                      {product.price.toLocaleString("de-DE")} €
+                    </span>
+                    {product.oldPrice && (
+                      <span className={styles.oldPrice}>
+                        {product.oldPrice.toLocaleString("de-DE")} €
+                      </span>
+                    )}
+                  </div>
+
+                  <Link href={`/shop/${product.id}`} className={styles.cardTitleLink}>
+                    <h3 className={styles.productName}>{name}</h3>
+                  </Link>
+
+                  <p className={styles.productDesc}>
+                    {description}
+                    {" "}
+                    <Link href={`/shop/${product.id}`} className={styles.readMoreLink}>
+                      {language === "ru" ? "Подробнее" : "Mehr Details"}
+                    </Link>
+                  </p>
 
                   {/* Особенности (Features) с золотыми галочками */}
                   {features && features.length > 0 && (
                     <ul className={styles.featureList}>
-                      {features.map((feature: string, idx: number) => (
+                      {features.slice(0, 2).map((feature: string, idx: number) => (
                         <li key={idx} className={styles.featureItem}>
                           <span className={styles.featureIcon}>✓</span>
                           <span>{feature}</span>
@@ -315,32 +339,33 @@ export default function ShopClient({ products }: ShopClientProps) {
                     </ul>
                   )}
 
-                  {/* Подвал карточки: цена и кнопка покупки */}
-                  <div className={styles.cardFooter}>
-                    <div className={styles.priceCol}>
-                      <span className={styles.priceLabel}>{language === "ru" ? "Стоимость" : "Preis"}</span>
-                      <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
-                        <span className={styles.price}>
-                          {product.price.toLocaleString("de-DE")} €
-                        </span>
-                        {product.oldPrice && (
-                          <span style={{ textDecoration: "line-through", color: "var(--color-gray)", fontSize: "14px" }}>
-                            {product.oldPrice.toLocaleString("de-DE")} €
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
+                  {/* Подвал карточки: Две кнопки "Купить" (залитая) и "В корзину" (рамка) */}
+                  <div className={styles.cardActionRow}>
                     <button
-                      className="btn btn-primary"
-                      style={{ padding: "10px 18px", fontSize: "13px", borderRadius: "var(--radius-md)" }}
+                      className={`${styles.actionBtn} ${styles.buyBtn}`}
                       onClick={() => addToCart({
                         id: product.id,
-                        name: name, // Передаем плоское имя для корзины
+                        name: name,
                         price: product.price,
                         category: product.category,
-                        imageUrl: product.imageUrl || ""
-                      } as any)}
+                        imageUrl: product.imageUrl || "",
+                        description: product.description,
+                        isAvailable: product.isAvailable
+                      } as any, true)}
+                    >
+                      {language === "ru" ? "Купить" : "Kaufen"}
+                    </button>
+                    <button
+                      className={`${styles.actionBtn} ${styles.cartBtnOutline}`}
+                      onClick={() => addToCart({
+                        id: product.id,
+                        name: name,
+                        price: product.price,
+                        category: product.category,
+                        imageUrl: product.imageUrl || "",
+                        description: product.description,
+                        isAvailable: product.isAvailable
+                      } as any, false)}
                     >
                       {t("shop", "addToCart")}
                     </button>
