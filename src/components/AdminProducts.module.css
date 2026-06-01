@@ -34,8 +34,28 @@
 /* Сетка товаров */
 .productsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 1200px) {
+  .productsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .productsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .productsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 .productCard {
@@ -57,13 +77,15 @@
 }
 
 .cardImageWrapper {
-  height: 160px;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   background-color: var(--color-gray-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   border-bottom: 1px solid var(--color-gray-border);
+  overflow: hidden;
 }
 
 .cardImage {
@@ -71,6 +93,21 @@
   height: 100%;
   object-fit: cover;
 }
+
+/* Описание товара */
+.productDesc {
+  font-size: 13px;
+  color: var(--color-gray);
+  line-height: 1.45;
+  margin-bottom: 12px;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 
 .cardEmoji {
   font-size: 48px;

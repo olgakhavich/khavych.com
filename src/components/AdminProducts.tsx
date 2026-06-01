@@ -397,6 +397,18 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ initialProducts, c
     return nameObj?.ru || "Без названия";
   };
 
+  // Вспомогательный метод получения описания продукта
+  const getProductDesc = (product: any) => {
+    if (!product.description) return "";
+    try {
+      const descObj = typeof product.description === "string" ? JSON.parse(product.description) : product.description;
+      return descObj?.ru || "";
+    } catch (e) {
+      return typeof product.description === "string" ? product.description : "";
+    }
+  };
+
+
   // Фильтруем продукты по выбранной категории
   const filteredProducts = products.filter((product) => {
     if (filter !== "ALL" && product.category !== filter) {
@@ -526,6 +538,11 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ initialProducts, c
                       <span className={styles.oldPrice}>{product.oldPrice} €</span>
                     )}
                   </div>
+
+                  <p className={styles.productDesc}>
+                    {getProductDesc(product)}
+                  </p>
+
 
                   <div className={styles.cardActions}>
                     {/* Переключатель активности */}
