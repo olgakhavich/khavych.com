@@ -360,15 +360,16 @@ export default function ShopClient({ products }: ShopClientProps) {
                   <div className={styles.cardActionRow}>
                     <button
                       className={`${styles.actionBtn} ${styles.buyBtn}`}
-                      onClick={() => addToCart({
-                        id: product.id,
-                        name: name,
-                        price: product.price,
-                        category: product.category,
-                        imageUrl: product.imageUrl || "",
-                        description: product.description,
-                        isAvailable: product.isAvailable
-                      } as any, true)}
+                    onClick={() => addToCart({
+                      id: product.id,
+                      name: product.name,
+                      price: product.price,
+                      category: product.category,
+                      imageUrl: product.imageUrl || "",
+                      description: product.description,
+                      isAvailable: product.isAvailable
+                    } as any, true)}
+
                     >
                       {language === "ru" ? "Купить" : "Kaufen"}
                     </button>
@@ -405,13 +406,14 @@ export default function ShopClient({ products }: ShopClientProps) {
                           e.stopPropagation();
                           addToCart({
                             id: product.id,
-                            name: name,
+                            name: product.name,
                             price: product.price,
                             category: product.category,
                             imageUrl: product.imageUrl || "",
                             description: product.description,
                             isAvailable: product.isAvailable
                           } as any, false);
+
                           setShowToast(true);
                         }}
                       >

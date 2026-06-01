@@ -29,6 +29,21 @@ interface CheckoutFormData {
  */
 export const CartDrawer: React.FC = () => {
   const { language, t } = useLanguage();
+  
+  // Безопасный парсинг переведенных полей на основе JSON структуры
+  const getTranslation = (fieldObj: any, lang: string = "ru") => {
+    if (!fieldObj) return "";
+    try {
+      const parsed = typeof fieldObj === "string" ? JSON.parse(fieldObj) : fieldObj;
+      if (typeof parsed === "object" && parsed !== null) {
+        return parsed[lang] || parsed["ru"] || "";
+      }
+      return typeof fieldObj === "string" ? fieldObj : "";
+    } catch (e) {
+      return typeof fieldObj === "string" ? fieldObj : "";
+    }
+  };
+
   const {
     items,
     total,
@@ -379,11 +394,12 @@ export const CartDrawer: React.FC = () => {
           customerAddress: hasBracelets ? formData.address : undefined,
           items: items.map((item) => ({
             id: item.product.id,
-            name: item.product.name,
+            name: getTranslation(item.product.name, language),
             price: item.product.price,
             quantity: item.quantity,
             category: item.product.category,
           })),
+
           totalAmount: total,
         }),
       });
@@ -535,7 +551,8 @@ export const CartDrawer: React.FC = () => {
                   {/* Детали товара */}
                   <div className={styles.itemDetails}>
                     <div>
-                      <h4 className={styles.itemName}>{item.product.name}</h4>
+                      <h4 className={styles.itemName}>{getTranslation(item.product.name, language)}</h4>
+
                       <span className={styles.itemMeta}>
                         {item.product.category === "BRACELET" && (language === "ru" ? "Браслет" : "Kraftarmband")}
                         {item.product.category === "COURSE" && (language === "ru" ? "Курс" : "Kurs")}

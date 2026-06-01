@@ -87,13 +87,14 @@ export default function ProductDetailClient({ product, serverLanguage }: IProduc
   const handleAddToCart = () => {
     addToCart({
       id: product.id,
-      name: name,
+      name: product.name,
       price: product.price,
       category: product.category,
       imageUrl: product.imageUrl || "",
       description: product.description,
       isAvailable: product.isAvailable
     } as any, false);
+
 
     // Показываем Toast-уведомление
     setShowToast(true);
@@ -113,7 +114,7 @@ export default function ProductDetailClient({ product, serverLanguage }: IProduc
   const handleBuyNow = () => {
     addToCart({
       id: product.id,
-      name: name,
+      name: product.name,
       price: product.price,
       category: product.category,
       imageUrl: product.imageUrl || "",
@@ -121,6 +122,7 @@ export default function ProductDetailClient({ product, serverLanguage }: IProduc
       isAvailable: product.isAvailable
     } as any, true);
   };
+
 
   // Блокируем скролл страницы при открытом лайтбоксе
   useEffect(() => {
