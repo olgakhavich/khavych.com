@@ -18,7 +18,8 @@ interface IProductDetailClientProps {
  * и раздельное добавление в корзину/оформление покупки.
  */
 export default function ProductDetailClient({ product, serverLanguage }: IProductDetailClientProps) {
-  const { items, addToCart, updateQuantity } = useCart();
+  const { items, addToCart, updateQuantity, setIsCartOpen } = useCart();
+
   const { language: clientLanguage, t } = useLanguage();
   
   const cartItem = items?.find((item) => item.product.id === product.id);
@@ -112,16 +113,21 @@ export default function ProductDetailClient({ product, serverLanguage }: IProduc
 
   // Обработчик "Купить" (добавление с открытием корзины)
   const handleBuyNow = () => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      category: product.category,
-      imageUrl: product.imageUrl || "",
-      description: product.description,
-      isAvailable: product.isAvailable
-    } as any, true);
+    if (quantityInCart > 0) {
+      setIsCartOpen(true);
+    } else {
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        category: product.category,
+        imageUrl: product.imageUrl || "",
+        description: product.description,
+        isAvailable: product.isAvailable
+      } as any, true);
+    }
   };
+
 
 
   // Блокируем скролл страницы при открытом лайтбоксе

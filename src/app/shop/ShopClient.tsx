@@ -22,7 +22,8 @@ interface ShopClientProps {
  * @returns JSX элемент каталога магазина.
  */
 export default function ShopClient({ products }: ShopClientProps) {
-  const { items, addToCart, updateQuantity } = useCart();
+  const { items, addToCart, updateQuantity, setIsCartOpen } = useCart();
+
 
   const { language, t } = useLanguage();
   const searchParams = useSearchParams();
@@ -360,15 +361,22 @@ export default function ShopClient({ products }: ShopClientProps) {
                   <div className={styles.cardActionRow}>
                     <button
                       className={`${styles.actionBtn} ${styles.buyBtn}`}
-                    onClick={() => addToCart({
-                      id: product.id,
-                      name: product.name,
-                      price: product.price,
-                      category: product.category,
-                      imageUrl: product.imageUrl || "",
-                      description: product.description,
-                      isAvailable: product.isAvailable
-                    } as any, true)}
+                    onClick={() => {
+                      if (quantityInCart > 0) {
+                        setIsCartOpen(true);
+                      } else {
+                        addToCart({
+                          id: product.id,
+                          name: product.name,
+                          price: product.price,
+                          category: product.category,
+                          imageUrl: product.imageUrl || "",
+                          description: product.description,
+                          isAvailable: product.isAvailable
+                        } as any, true);
+                      }
+                    }}
+
 
                     >
                       {language === "ru" ? "Купить" : "Kaufen"}
