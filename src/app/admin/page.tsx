@@ -122,8 +122,10 @@ export default async function AdminPage() {
     subCategory: p.subCategory,
     features: p.features,
     isAvailable: p.isAvailable,
+    courseId: p.courseId,
     createdAt: p.createdAt.toISOString(),
   }));
+
 
   return (
     <div className={styles.cabinetPage}>
