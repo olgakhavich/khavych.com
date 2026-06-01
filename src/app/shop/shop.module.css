@@ -112,6 +112,7 @@
 
 /* Категорийный бейдж */
 .badge {
+  display: none; /* Временно скрыто по просьбе пользователя */
   position: absolute;
   top: 16px;
   left: 16px;
@@ -127,6 +128,7 @@
   border: 1px solid rgba(197, 23, 34, 0.2);
   box-shadow: var(--shadow-sm);
 }
+
 
 .badgeBracelet {
 }
