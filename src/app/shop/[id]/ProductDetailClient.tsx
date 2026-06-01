@@ -18,8 +18,12 @@ interface IProductDetailClientProps {
  * и раздельное добавление в корзину/оформление покупки.
  */
 export default function ProductDetailClient({ product, serverLanguage }: IProductDetailClientProps) {
-  const { addToCart } = useCart();
+  const { items, addToCart, updateQuantity } = useCart();
   const { language: clientLanguage, t } = useLanguage();
+  
+  const cartItem = items?.find((item) => item.product.id === product.id);
+  const quantityInCart = cartItem ? cartItem.quantity : 0;
+
   const [isLightboxOpen, setIsLightboxOpen] = useState<boolean>(false);
   const [showToast, setShowToast] = useState<boolean>(false);
 
@@ -256,9 +260,34 @@ export default function ProductDetailClient({ product, serverLanguage }: IProduc
                 <span>{language === "ru" ? "Купить сейчас" : "Jetzt kaufen"}</span>
               </button>
               
-              <button className={`${styles.actionBtn} ${styles.cartBtnOutline}`} onClick={handleAddToCart}>
-                <span>{t("shop", "addToCart")}</span>
-              </button>
+              {quantityInCart > 0 ? (
+                <div className={styles.quantitySelector}>
+                  <button 
+                    className={styles.quantityBtn} 
+                    onClick={() => updateQuantity(product.id, quantityInCart - 1)}
+                  >
+                    −
+                  </button>
+                  <span className={styles.quantityVal}>{quantityInCart}</span>
+                  <button 
+                    className={styles.quantityBtn} 
+                    onClick={() => {
+                      if (product.category === "BRACELET") {
+                        updateQuantity(product.id, quantityInCart + 1);
+                      }
+                    }}
+                    disabled={product.category !== "BRACELET"}
+                    title={product.category !== "BRACELET" ? (language === "ru" ? "Этот товар можно приобрести только в одном экземпляре" : "Dieses Produkt kann nur einmal erworben werden") : ""}
+                  >
+                    +
+                  </button>
+                </div>
+              ) : (
+                <button className={`${styles.actionBtn} ${styles.cartBtnOutline}`} onClick={handleAddToCart}>
+                  <span>{t("shop", "addToCart")}</span>
+                </button>
+              )}
+
             </div>
           </div>
         </section>

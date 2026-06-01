@@ -22,7 +22,8 @@ interface ShopClientProps {
  * @returns JSX элемент каталога магазина.
  */
 export default function ShopClient({ products }: ShopClientProps) {
-  const { addToCart } = useCart();
+  const { items, addToCart, updateQuantity } = useCart();
+
   const { language, t } = useLanguage();
   const searchParams = useSearchParams();
 
@@ -37,6 +38,18 @@ export default function ShopClient({ products }: ShopClientProps) {
 
   // Состояние текстового поиска товаров
   const [searchQuery, setSearchQuery] = useState("");
+  const [showToast, setShowToast] = useState<boolean>(false);
+
+  // Плавное скрытие Toast-уведомления
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+
 
   // Инициализация фильтров из query-параметров при первой загрузке
   useEffect(() => {
@@ -224,8 +237,12 @@ export default function ShopClient({ products }: ShopClientProps) {
           </div>
         ) : (
           displayProducts.map((product) => {
+            const cartItem = items?.find((item) => item.product.id === product.id);
+            const quantityInCart = cartItem ? cartItem.quantity : 0;
+
             // Определение локализованных данных
             const name = getTranslation(product.name, locale);
+
             const description = getTranslation(product.description, locale);
             const features = getFeatures(product.features, locale);
 
@@ -355,20 +372,53 @@ export default function ShopClient({ products }: ShopClientProps) {
                     >
                       {language === "ru" ? "Купить" : "Kaufen"}
                     </button>
-                    <button
-                      className={`${styles.actionBtn} ${styles.cartBtnOutline}`}
-                      onClick={() => addToCart({
-                        id: product.id,
-                        name: name,
-                        price: product.price,
-                        category: product.category,
-                        imageUrl: product.imageUrl || "",
-                        description: product.description,
-                        isAvailable: product.isAvailable
-                      } as any, false)}
-                    >
-                      {t("shop", "addToCart")}
-                    </button>
+                    {quantityInCart > 0 ? (
+                      <div className={styles.quantitySelector}>
+                        <button 
+                          className={styles.quantityBtn} 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateQuantity(product.id, quantityInCart - 1);
+                          }}
+                        >
+                          −
+                        </button>
+                        <span className={styles.quantityVal}>{quantityInCart}</span>
+                        <button 
+                          className={styles.quantityBtn} 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (product.category === "BRACELET") {
+                              updateQuantity(product.id, quantityInCart + 1);
+                            }
+                          }}
+                          disabled={product.category !== "BRACELET"}
+                          title={product.category !== "BRACELET" ? (language === "ru" ? "Этот товар можно приобрести только в одном экземпляре" : "Dieses Produkt kann nur einmal erworben werden") : ""}
+                        >
+                          +
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        className={`${styles.actionBtn} ${styles.cartBtnOutline}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          addToCart({
+                            id: product.id,
+                            name: name,
+                            price: product.price,
+                            category: product.category,
+                            imageUrl: product.imageUrl || "",
+                            description: product.description,
+                            isAvailable: product.isAvailable
+                          } as any, false);
+                          setShowToast(true);
+                        }}
+                      >
+                        {t("shop", "addToCart")}
+                      </button>
+                    )}
+
                   </div>
                 </div>
               </article>
@@ -376,6 +426,18 @@ export default function ShopClient({ products }: ShopClientProps) {
           })
         )}
       </section>
+      {/* Toast-уведомление о добавлении в корзину */}
+      <div className={`${styles.toast} ${showToast ? styles.toastVisible : ""}`}>
+        <div className={styles.toastContent}>
+          <span className={styles.toastIcon}>✓</span>
+          <span>
+            {language === "ru"
+              ? "Товар успешно добавлен в корзину"
+              : "Produkt erfolgreich in den Warenkorb gelegt"}
+          </span>
+        </div>
+      </div>
     </main>
+
   );
 }

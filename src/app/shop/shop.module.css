@@ -386,4 +386,90 @@
   color: var(--color-primary);
 }
 
+/* Селектор количества товара вместо кнопки "В корзину" */
+.quantitySelector {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--color-primary-light);
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  height: 38px; /* Чуть меньше высоты .actionBtn с рамкой 1.5px */
+  padding: 0 4px;
+  box-sizing: border-box;
+  transition: var(--transition-normal);
+}
+
+.quantityBtn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+}
+
+.quantityBtn:hover:not(:disabled) {
+  background-color: rgba(197, 23, 34, 0.15);
+}
+
+.quantityBtn:disabled {
+  color: var(--color-gray-border);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.quantityVal {
+  font-family: var(--font-title);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* Toast уведомление о добавлении в корзину */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: var(--color-dark);
+  color: var(--color-light);
+  padding: 16px 24px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 1001;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity var(--transition-normal), transform var(--transition-normal);
+}
+
+.toastVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toastContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-title);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.toastIcon {
+  color: #10b981;
+  font-weight: 800;
+}
+
+
 
