@@ -302,15 +302,16 @@ export default function ShopClient({ products }: ShopClientProps) {
                       <span 
                         style={{
                           position: "absolute",
-                          top: "16px",
-                          right: "16px",
+                          top: "8px",
+                          right: "8px",
                           backgroundColor: "var(--color-primary)",
                           color: "#fff",
-                          padding: "4px 10px",
+                          padding: "3px 8px",
                           borderRadius: "var(--radius-sm)",
-                          fontSize: "12px",
+                          fontSize: "10px",
                           fontWeight: 700,
-                          boxShadow: "0 2px 6px rgba(197, 23, 34, 0.2)"
+                          boxShadow: "0 2px 4px rgba(197, 23, 34, 0.1)",
+                          zIndex: 2
                         }}
                       >
                         -{discountPercent}%

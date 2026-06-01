@@ -112,21 +112,25 @@
 
 /* Категорийный бейдж */
 .badge {
-  display: none; /* Временно скрыто по просьбе пользователя */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
-  top: 16px;
-  left: 16px;
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
-  font-family: var(--font-title);
-  font-size: 11px;
-  font-weight: 700;
+  top: 8px;
+  left: 8px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   background-color: #ffffff;
-  color: var(--color-primary);
-  border: 1px solid rgba(197, 23, 34, 0.2);
-  box-shadow: var(--shadow-sm);
+  color: var(--color-gray-dark);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  z-index: 2;
+  transition: all 0.2s ease;
 }
 
 
