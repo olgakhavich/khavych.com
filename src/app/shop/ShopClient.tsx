@@ -323,27 +323,29 @@ export default function ShopClient({ products }: ShopClientProps) {
                 <div className={styles.cardBody}>
                   {/* Цена СРАЗУ после картинки */}
                   <div className={styles.priceRow}>
-                    <span className={styles.price}>
-                      {product.price.toLocaleString("de-DE")} €
-                    </span>
-                    {product.oldPrice && (
-                      <span className={styles.oldPrice}>
-                        {product.oldPrice.toLocaleString("de-DE")} €
+                    <div className={styles.priceValues}>
+                      <span className={styles.price}>
+                        {product.price.toLocaleString("de-DE")} €
                       </span>
-                    )}
+                      {product.oldPrice && (
+                        <span className={styles.oldPrice}>
+                          {product.oldPrice.toLocaleString("de-DE")} €
+                        </span>
+                      )}
+                    </div>
+                    <Link href={`/shop/${product.id}`} className={styles.priceMoreLink}>
+                      {language === "ru" ? "Подробнее" : "Mehr Details"}
+                    </Link>
                   </div>
 
                   <Link href={`/shop/${product.id}`} className={styles.cardTitleLink}>
                     <h3 className={styles.productName}>{name}</h3>
                   </Link>
 
-                  <p className={styles.productDesc}>
+                  <Link href={`/shop/${product.id}`} className={styles.productDesc}>
                     {description}
-                    {" "}
-                    <Link href={`/shop/${product.id}`} className={styles.readMoreLink}>
-                      {language === "ru" ? "Подробнее" : "Mehr Details"}
-                    </Link>
-                  </p>
+                  </Link>
+
 
                   {/* Особенности (Features) с золотыми галочками */}
                   {features && features.length > 0 && (
