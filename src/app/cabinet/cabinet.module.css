@@ -934,11 +934,13 @@
     margin-top: 4px;
   }
 
-  .courseHeaderActions button {
+  .courseHeaderActions :global(.btn) {
     flex: 1;
     justify-content: center;
     padding: 8px 6px !important;
     font-size: 11px !important;
+    white-space: nowrap !important;
+    height: 32px !important;
   }
 }
 
@@ -1013,16 +1015,20 @@
   }
 
   /* Кнопки Редактировать и Удалить на мобильных */
-  .lessonActions button.btn {
+  .lessonActions :global(.btn) {
     flex: 1;
     justify-content: center;
-    padding: 8px 6px !important;
-    font-size: 12px !important;
+    padding: 8px 10px !important;
+    font-size: 11px !important; /* Уменьшаем до 11px для предотвращения наложения */
     margin-left: 0 !important;
+    white-space: nowrap !important; /* Запрещаем перенос */
+    width: auto !important;
+    height: 32px !important;
+    border-radius: var(--radius-md) !important;
   }
 
   /* Кнопочки изменения порядка ▲ ▼ */
-  .lessonActions button:not(.btn) {
+  .lessonActions button:not(:global(.btn)) {
     flex-shrink: 0;
     width: 32px !important;
     height: 32px !important;
