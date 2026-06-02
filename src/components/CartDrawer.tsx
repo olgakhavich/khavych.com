@@ -541,12 +541,20 @@ export const CartDrawer: React.FC = () => {
             <div className={styles.itemList}>
               {items.map((item) => (
                 <div key={item.product.id} className={styles.item}>
-                  {/* Заглушка изображения товара */}
-                  <div className={styles.itemImagePlaceholder}>
-                    {item.product.category === "BRACELET" && "📿"}
-                    {item.product.category === "COURSE" && "📖"}
-                    {item.product.category === "CONSULTATION" && "🔮"}
-                  </div>
+                  {/* Изображение товара (реальное фото или заглушка-эмодзи) */}
+                  {item.product.imageUrl ? (
+                    <img 
+                      src={item.product.imageUrl} 
+                      alt={getTranslation(item.product.name, language)} 
+                      className={styles.itemImage}
+                    />
+                  ) : (
+                    <div className={styles.itemImagePlaceholder}>
+                      {item.product.category === "BRACELET" && "📿"}
+                      {item.product.category === "COURSE" && "📖"}
+                      {item.product.category === "CONSULTATION" && "🔮"}
+                    </div>
+                  )}
 
                   {/* Детали товара */}
                   <div className={styles.itemDetails}>
