@@ -394,12 +394,12 @@
   .actionBtn {
     padding: 8px 4px !important;
     font-size: 11px !important;
-    border-radius: var(--radius-sm) !important;
+    border-radius: var(--radius-md) !important;
   }
 
   .quantitySelector {
     height: 34px !important;
-    border-radius: var(--radius-sm) !important;
+    border-radius: var(--radius-md) !important;
   }
 
   .quantityBtn {
