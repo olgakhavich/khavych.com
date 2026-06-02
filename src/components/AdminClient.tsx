@@ -1747,7 +1747,7 @@ export const AdminClient: React.FC<IAdminClientProps> = ({ initialUsers, courses
               className="btn btn-primary"
               style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "10px 20px" }}
             >
-              ➕ Добавить новый курс
+              Добавить курс
             </button>
           </div>
           {localCourses.map((course) => {
@@ -1766,44 +1766,25 @@ export const AdminClient: React.FC<IAdminClientProps> = ({ initialUsers, courses
                 {/* Заголовок курса (кликабельный для открытия) */}
                 <div
                   onClick={() => toggleCourseExpand(course.id)}
-                  style={{
-                    padding: "20px 24px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    cursor: "pointer",
-                    backgroundColor: isExpanded ? "#fbf7f5" : "transparent",
-                    transition: "background-color 0.2s",
-                  }}
+                  className={`${styles.courseHeader} ${isExpanded ? styles.courseHeaderExpanded : ""}`}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+                  <div className={styles.courseHeaderLeft}>
                     <div
+                      className={styles.courseStatusDot}
                       style={{
-                        width: "10px",
-                        height: "10px",
-                        borderRadius: "50%",
                         backgroundColor: course.isPublished ? "#2e7d32" : "#c62828",
                       }}
                       title={course.isPublished ? "Опубликован" : "Черновик"}
                     />
-                    <h3 style={{ margin: 0, fontSize: "17px", fontWeight: 700, color: "var(--color-dark)" }}>
+                    <h3 className={styles.courseTitleText}>
                       {course.title}
                     </h3>
-                    <span
-                      style={{
-                        fontSize: "12px",
-                        backgroundColor: "#eae0db",
-                        color: "var(--color-dark)",
-                        padding: "2px 8px",
-                        borderRadius: "10px",
-                        fontWeight: 600,
-                      }}
-                    >
+                    <span className={styles.lessonsBadge}>
                       Уроков: {course.lessons.length}
                     </span>
                   </div>
 
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }} onClick={(e) => e.stopPropagation()}>
+                  <div className={styles.courseHeaderActions} onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={() => handleOpenCourseModal(course)}
                       className="btn btn-secondary"
@@ -1834,7 +1815,7 @@ export const AdminClient: React.FC<IAdminClientProps> = ({ initialUsers, courses
                     >
                       🗑️ Удалить
                     </button>
-                    <span style={{ fontSize: "20px", color: "#888", marginLeft: "5px", userSelect: "none" }}>
+                    <span className={styles.arrowIcon}>
                       {isExpanded ? "▲" : "▼"}
                     </span>
                   </div>
@@ -1852,17 +1833,9 @@ export const AdminClient: React.FC<IAdminClientProps> = ({ initialUsers, courses
                         {course.lessons.map((lesson, idx) => (
                           <div
                             key={lesson.id}
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              padding: "12px 18px",
-                              backgroundColor: "#faf6f4",
-                              border: "1px solid #f2e6e1",
-                              borderRadius: "var(--radius-md)",
-                            }}
+                            className={styles.lessonRow}
                           >
-                            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                            <div className={styles.lessonInfo}>
                               {/* Порядковый номер */}
                               <span
                                 style={{
@@ -1876,13 +1849,14 @@ export const AdminClient: React.FC<IAdminClientProps> = ({ initialUsers, courses
                                   display: "flex",
                                   alignItems: "center",
                                   justifyContent: "center",
+                                  flexShrink: 0,
                                 }}
                               >
                                 {lesson.order}
                               </span>
 
-                              <div>
-                                <div style={{ fontWeight: 700, color: "var(--color-dark)", fontSize: "14px" }}>
+                              <div className={styles.lessonMetaInfo}>
+                                <div className={styles.lessonMetaInfoTitle}>
                                   {lesson.title}
                                 </div>
                                 <div
@@ -1913,7 +1887,7 @@ export const AdminClient: React.FC<IAdminClientProps> = ({ initialUsers, courses
                             </div>
 
                             {/* Управление уроком */}
-                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            <div className={styles.lessonActions}>
                               {/* Кнопочки изменения порядка */}
                               <button
                                 onClick={() => handleMoveLesson(course.id, lesson.id, "up")}
