@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "src/context/LanguageContext";
+import { Turnstile } from "@marsidev/react-turnstile";
 import styles from "./auth.module.css";
 
 /**
@@ -16,9 +17,10 @@ import styles from "./auth.module.css";
  */
 export default function LoginClient() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [turnstileToken, setTurnstileToken] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -29,6 +31,12 @@ export default function LoginClient() {
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!turnstileToken) {
+      setError(language === "ru" ? "Пожалуйста, пройдите проверку безопасности" : "Bitte bestehen Sie die Sicherheitsprüfung");
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
 
@@ -38,7 +46,7 @@ export default function LoginClient() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, turnstileToken }),
       });
 
       const result = await response.json();
@@ -102,6 +110,16 @@ export default function LoginClient() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+            />
+          </div>
+
+          {/* Cloudflare Turnstile для защиты от брутфорс-атак */}
+          <div style={{ display: "flex", justifyContent: "center", margin: "16px 0" }}>
+            <Turnstile
+              siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+              onSuccess={(token) => setTurnstileToken(token)}
+              onError={() => setError(language === "ru" ? "Ошибка проверки безопасности Turnstile" : "Turnstile-Sicherheitsprüfung fehlgeschlagen")}
+              onExpire={() => setTurnstileToken("")}
             />
           </div>
 

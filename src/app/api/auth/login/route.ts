@@ -9,6 +9,7 @@ import { logger } from "src/lib/logger";
 const loginSchema = z.object({
   email: z.string().email("Неверный формат Email"),
   password: z.string().min(1, "Пароль не может быть пустым"),
+  turnstileToken: z.string().min(1, "Токен безопасности Turnstile отсутствует"),
 });
 
 /**
@@ -21,6 +22,39 @@ export async function POST(request: Request) {
 
     // 1. Валидация входных данных
     const validatedData = loginSchema.parse(body);
+
+    // 1.5. Валидация Cloudflare Turnstile токена безопасности
+    const secretKey = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || "1x00000000000000000000000000000000";
+    
+    try {
+      const cfResponse = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          secret: secretKey,
+          response: validatedData.turnstileToken,
+        }),
+      });
+      
+      const cfResult = await cfResponse.json();
+      
+      if (!cfResult.success) {
+        logger.warn({ email: validatedData.email, cfResult }, "Авторизация отклонена: неверный или просроченный токен Turnstile (бот)");
+        return NextResponse.json(
+          {
+            error: true,
+            code: "TURNSTILE_FAILED",
+            message: "Проверка безопасности не пройдена. Пожалуйста, попробуйте снова.",
+          },
+          { status: 400 }
+        );
+      }
+    } catch (cfError) {
+      logger.error({ cfError }, "Ошибка при валидации токена Cloudflare Turnstile на входе");
+      // Fail-open: пропускаем авторизацию, если API Cloudflare лежит, чтобы не блокировать реальных людей
+    }
 
     // 2. Поиск пользователя в БД
     const user = await db.user.findUnique({
