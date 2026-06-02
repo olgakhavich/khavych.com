@@ -232,13 +232,7 @@
 
 /* Список фич */
 .featureList {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
-  padding-top: 12px;
-  border-top: 1px solid var(--color-gray-light);
+  display: none; /* Скрыто везде в карточках товара по просьбе пользователя */
 }
 
 .featureItem {
