@@ -1815,7 +1815,13 @@ export const AdminClient: React.FC<IAdminClientProps> = ({ initialUsers, courses
                     >
                       🗑️ Удалить
                     </button>
-                    <span className={styles.arrowIcon}>
+                    <span
+                      className={styles.arrowIcon}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleCourseExpand(course.id);
+                      }}
+                    >
                       {isExpanded ? "▲" : "▼"}
                     </span>
                   </div>

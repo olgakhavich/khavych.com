@@ -929,7 +929,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 15px !important; /* Кнопки управления курсом на моблильных размести вторым рядом под заголовоком на плашке. Сделай между ними gap 15px. */
+    gap: 10px !important; /* Сделай между ними gap 10px */
     width: 100%;
     margin-top: 4px;
   }
