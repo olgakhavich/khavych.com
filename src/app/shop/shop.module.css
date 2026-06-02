@@ -407,6 +407,17 @@
     height: 24px !important;
     font-size: 14px !important;
   }
+
+  /* Отключение hover-эффектов на мобильных, предотвращая сдвиги */
+  .card:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-sm) !important;
+  }
+
+  .buyBtn:hover,
+  .cartBtnOutline:hover {
+    transform: none !important;
+  }
 }
 
 /* Стили подфильтров для консультаций */
