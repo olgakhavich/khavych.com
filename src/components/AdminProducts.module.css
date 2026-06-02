@@ -677,6 +677,31 @@
 
 /* --- Адаптивность вкладки товаров для мобильных --- */
 @media (max-width: 576px) {
+  /* Хедер с кнопкой и заголовком по дизайну как в курсах */
+  .headerRow {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 15px !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .headerRow > div:first-child {
+    flex: 1 !important;
+  }
+
+  .headerRow > div:first-child p {
+    display: none !important; /* Убираем описание хедера на мобильных */
+  }
+
+  .headerRow h2 {
+    font-size: 20px !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+
   /* Двухколоночная сетка товаров с gap 5px */
   .productsGrid {
     grid-template-columns: repeat(2, 1fr) !important;
@@ -689,8 +714,13 @@
   }
 
   .addBtn {
-    padding: 8px 14px !important;
-    font-size: 13px !important;
+    padding: 8px 12px !important; /* Делаем покомпактнее */
+    font-size: 12px !important;
+    height: 34px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
   }
 
   /* Скрытие описания товаров */
